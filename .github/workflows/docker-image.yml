@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -29,6 +29,6 @@ jobs:
           set -e
           for file in $(git diff --name-only HEAD~1 | grep -E 'Dockerfile(\.[^/]+)?$'); do
             tag=$(basename "$(dirname "$file")")
-            docker build --pull . -f "$file" -t ifaniqbal/php-sqlsrv:"$tag"
-            docker push ifaniqbal/php-sqlsrv:"$tag"
+            docker build --pull . -f "$file" -t mirzamk/crud:"$tag"
+            docker push mirzakm/crud:"$tag"
           done
