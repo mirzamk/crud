@@ -1,0 +1,47 @@
+version: "3"
+volumes:
+  crud-volume:
+networks:
+  crud-network:
+
+services:
+
+  mysql-db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+
+    environment:
+      MYSQL_DATABASE: crud
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    volumes:
+      - crud-volume:/var/lib/mysql
+    networks:
+      - crud-network
+
+  crud-project:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - mysql-db
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      DB_HOST: mysql-db
+    networks:
+      - crud-network
+
+  phpmyadmin:
+    image: phpmyadmin
+    depends_on:
+      - mysql-db
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql-db
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    networks:
+      - crud-network
